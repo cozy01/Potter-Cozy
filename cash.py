@@ -62,7 +62,6 @@ try:
 except Exception as ex:
     print("파일 없습니다")
     print(ex)
-
     
 ###########################
 # 계좌정보를 이용하여 구현될 기능을 담고 있는 클래스 멤버필드 
@@ -75,9 +74,12 @@ class BankManager:
                 print("계좌이름 : ",i.name)
                 print("계좌잔고 : ",i.balance)
                 money = int(input("출금하실 금액을 입력해주세요 : "))
-                bal = i.withdraw(money)
-                print("\n##계좌잔고 : {0} 원##".format(bal))
-                print("##출금이 완료되었습니다##")
+                if money < i.balance:
+                    bal = i.withdraw(money)
+                    print("\n##계좌잔고 : {0} 원##".format(bal))
+                    print("##출금이 완료되었습니다##")
+                else:
+                    print("잔액 부족")
                 return 0
         print("일치하는 계좌번호가 존재하지 않습니다")
 
@@ -90,9 +92,12 @@ class BankManager:
                 print("계좌이름 : ",i.name)
                 print("계좌잔고 : ",i.balance)
                 money = int(input("입금하실 금액을 입력해주세요 : "))
-                bal = i.deposit(money)
-                print("\n##계좌잔고 : {0} 원##".format(bal))
-                print("##입금이 완료되었습니다##")
+                if money >= 0:
+                    bal = i.deposit(money)
+                    print("\n##계좌잔고 : {0} 원##".format(bal))
+                    print("##입금이 완료되었습니다##")
+                else:
+                    print("금액 입력이 올바르지 않습니다.")
                 return 0
         print("일치하는 계좌번호가 존재하지 않습니다")
     
@@ -118,7 +123,27 @@ class BankManager:
             f.write(i.info())
             
         f.close()
-            
+
+    # 계좌 삭제 메서드
+    def loan(self,userid):
+        for i in all_id:
+            if i.getid() == userid:
+                print("계좌이름 : ",i.name)
+                print("계좌잔고 : ",i.balance)
+                money = int(input("대출하실 금액을 입력해주세요 : "))
+                if money >= 0:
+                    bal = i.deposit(money)
+                    print("\n##계좌잔고 : {0} 원##".format(bal))
+                    print("##대출이 완료되었습니다##")
+                else:
+                    print("금액 입력이 올바르지 않습니다.")
+                return 0
+        print("일치하는 계좌번호가 존재하지 않습니다")  
+
+
+
+
+
 ############################
 # 사용자와의 인터페이스를 담당할 목적의 클래스
 class BanckingSystem: 
@@ -129,7 +154,7 @@ class BanckingSystem:
             print("2. 입금하기")
             print("3. 출금하기")
             print("4. 전체조회")
-            print("5. 계좌이체")
+            print("5. 대출")
             print("6. 프로그램 종료")
             print("=====================")
             ch = input("입력 : ")
@@ -157,9 +182,12 @@ class BanckingSystem:
                 BankManager().showAccount()
                 print("=====================")
 
-            # elif ch == "5":     # 추가기능
-                
-                
+            elif ch == "5":     # 추가기능1: 대출
+                print("=======대출=======")
+                userid = input("대출하실 계좌번호를 입력해주세요 : ")
+                BankManager().loan(userid)
+                print("=====================")
+                              
             elif ch == "6":     # 종료
                 BankManager().save()
                 print("종료")
